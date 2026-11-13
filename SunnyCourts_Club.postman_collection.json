@@ -1,0 +1,176 @@
+{
+  "info": {
+    "name": "SunnyCourts Club API (NU-AIAGAI2C-G07)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Get All Courts",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/courts"
+      }
+    },
+    {
+      "name": "2. Get One Court",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/courts/1"
+      }
+    },
+    {
+      "name": "3. Add Court (Valid)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Court D1\",\n  \"sport\": \"Squash\"\n}"
+        },
+        "url": "{{baseUrl}}/courts"
+      }
+    },
+    {
+      "name": "4. Add Court (Validation Error 400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"\"\n}"
+        },
+        "url": "{{baseUrl}}/courts"
+      }
+    },
+    {
+      "name": "5. Update Court",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Court A1 Pro\",\n  \"sport\": \"Tennis\"\n}"
+        },
+        "url": "{{baseUrl}}/courts/1"
+      }
+    },
+    {
+      "name": "6. Delete Court",
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/courts/4"
+      }
+    },
+    {
+      "name": "7. Search Courts by Sport (?sport=Tennis)",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/courts?sport=Tennis"
+      }
+    },
+    {
+      "name": "8. Twist Test 1 - Smart Search (?q=court)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('Returns matches', () => pm.expect(pm.response.json().length).to.be.above(0));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/courts?q=court"
+      }
+    },
+    {
+      "name": "9. Twist Test 2 - Smart Search Case-Insensitive (?q=COURT)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('Returns matches ignoring case', () => pm.expect(pm.response.json().length).to.be.above(0));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/courts?q=COURT"
+      }
+    },
+    {
+      "name": "10. Twist Test 3 - Smart Search No Match (?q=zzz)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+              "const json = pm.response.json();",
+              "pm.test('Message is Nothing found', () => pm.expect(json.message).to.eql('Nothing found'));",
+              "pm.test('Results list is empty', () => pm.expect(json.results).to.be.an('array').that.is.empty);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/courts?q=zzz"
+      }
+    },
+    {
+      "name": "11. Join Endpoint - Get Reservations with Player & Court Names",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/reservations"
+      }
+    },
+    {
+      "name": "12. Book Reservation (POST)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"player_id\": 1,\n  \"court_id\": 1,\n  \"booking_date\": \"2026-11-16\",\n  \"time_slot\": \"18:00\"\n}"
+        },
+        "url": "{{baseUrl}}/reservations"
+      }
+    }
+  ]
+}
